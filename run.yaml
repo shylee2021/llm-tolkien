@@ -1,0 +1,15 @@
+name: llm-tolkien-bloom-3b
+image: nvcr.io/nvidia/pytorch:22.03-py3
+resources:
+  cluster: aws-apne2
+  accelerators: V100:1
+volumes:
+  /root/llm_tolkien: git://github.com/shylee2021/llm-tolkien
+  /output:
+    artifact: true
+run:
+  - workdir: /root/llm_tolkien
+    command: |
+      pip install fsspec==2023.6.0 transformers datasets peft accelerate bitsandbytes -qq
+      wget https://raw.githubusercontent.com/jeremyarancio/llm-tolkien/main/llm/data/extracted_text.jsonl
+      python train.py
